@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ADU Eligibility Calculator{% endblock %} | ADU Advisor</title>
+  <meta name="description" content="Prototype ADU eligibility screening tool. Preliminary assessment for property owners in California.">
+  
+  <!-- Favicon to avoid 404 logs -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/><polyline points='9 22 9 12 15 12 15 22'/></svg>">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Local Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="flex flex-col min-h-full font-sans text-slate-900 antialiased selection:bg-blue-600 selection:text-white">
+  
+  <!-- Top Navigation -->
+  <header class="sticky top-0 z-40 bg-white border-b border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Brand / Logo -->
+        <a href="{% url 'calculator:index' %}" class="flex items-center space-x-2.5 sm:space-x-3 text-slate-900 hover:text-blue-700 transition flex-shrink-0">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm flex-shrink-0">
+            <!-- Lucide Home Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </div>
+          <div>
+            <span class="font-bold text-base sm:text-lg tracking-tight block leading-none">ADU Advisor</span>
+            <span class="hidden sm:block text-[11px] text-slate-500 font-medium uppercase tracking-wider mt-1">Prototype Calculator</span>
+          </div>
+        </a>
+
+        <!-- Header Actions -->
+        <nav class="flex items-center space-x-2 sm:space-x-4">
+          <a href="{% url 'calculator:questions' %}" class="inline-flex items-center px-2.5 sm:px-3.5 py-1.5 border border-transparent text-xs sm:text-sm font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition active:scale-95">
+            <span>Start Check</span>
+          </a>
+          <a href="{% url 'portal:dashboard' %}" class="inline-flex items-center px-2 sm:px-2.5 py-1.5 text-xs sm:text-sm font-medium text-slate-600 hover:text-slate-900 rounded-md hover:bg-slate-100 transition" title="Staff Management Portal">
+            <!-- Lucide Shield Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:mr-1 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span class="hidden sm:inline">Staff</span>
+          </a>
+        </nav>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Flash Messages -->
+  {% if messages %}
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+      {% for message in messages %}
+        <div class="p-3.5 sm:p-4 mb-3 rounded-lg text-xs sm:text-sm {% if message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200{% else %}bg-blue-50 text-blue-800 border border-blue-200{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Main Content Container -->
+  <main class="flex-grow">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Accessible Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-12 sm:mt-16 py-8">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        
+        <div>
+          <p class="text-xs sm:text-sm font-semibold text-slate-800">ADU Eligibility Calculator &bull; Demonstration Prototype</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 mt-1 max-w-xl leading-relaxed">
+            This tool provides preliminary informational screening based on generalized California ADU statutes. It does not constitute formal legal, architectural, zoning, or engineering advice.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-500 pt-2 md:pt-0">
+          <a href="{% url 'calculator:index' %}" class="hover:text-slate-800 transition">Overview</a>
+          <a href="{% url 'calculator:questions' %}" class="hover:text-slate-800 transition">Assessment</a>
+          <a href="{% url 'calculator:restart' %}" class="hover:text-slate-800 transition">Reset Session</a>
+          <a href="{% url 'portal:dashboard' %}" class="hover:text-slate-800 transition">Staff Portal</a>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts Block -->
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

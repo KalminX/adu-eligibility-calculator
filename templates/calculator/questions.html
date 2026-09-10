@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Eligibility Assessment Questionnaire{% endblock %}
+
+{% block content %}
+<div class="py-6 sm:py-10 max-w-2xl mx-auto px-4 sm:px-6">
+  
+  <!-- Header & Progress Container -->
+  <div class="mb-6 sm:mb-8 text-center">
+    <span class="text-xs font-semibold tracking-wider text-blue-600 uppercase">Step 1 of 3</span>
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">Property Qualification Check</h1>
+    <p class="text-xs sm:text-sm text-slate-600 mt-1.5 max-w-md mx-auto">
+      Answer each question to screen your property against California ADU guidelines.
+    </p>
+
+    <!-- Progress Bar -->
+    <div class="mt-5 max-w-md mx-auto">
+      <div class="flex justify-between text-xs font-medium text-slate-500 mb-1.5">
+        <span id="progress-step-text">Question 1 of {{ questions|length }}</span>
+        <span>7 Questions</span>
+      </div>
+      <div class="w-full bg-slate-200 h-2 sm:h-2.5 rounded-full overflow-hidden" role="progressbar" aria-label="Questionnaire Progress">
+        <div id="progress-bar" class="bg-blue-600 h-full rounded-full transition-all duration-300 ease-out" style="width: 14%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Validation Summary (if server-side errors occur) -->
+  {% if form.errors %}
+    <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-900 text-sm">
+      <p class="font-bold text-red-950 mb-1">Please complete all 7 questions:</p>
+      <ul class="list-disc list-inside text-xs space-y-1 text-red-800">
+        {% for field_name, errors in form.errors.items %}
+          <li>{{ errors.0 }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <!-- Step Validation Alert for JS navigation -->
+  <div id="step-validation-error" class="hidden mb-6 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs sm:text-sm flex items-center space-x-2">
+    <!-- Lucide AlertCircle -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-700 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <span>Please select Yes or No before proceeding to the next question.</span>
+  </div>
+
+  <!-- Questionnaire Form -->
+  <form id="questionnaire-form" method="post" action="{% url 'calculator:questions' %}" class="space-y-6">
+    {% csrf_token %}
+
+    {% for question in questions %}
+      <div class="question-step-card bg-white p-4 sm:p-8 rounded-2xl border border-slate-200 shadow-sm transition" data-step="{{ forloop.counter0 }}">
+        
+        <div class="flex items-center justify-between mb-3">
+          <span class="inline-flex items-center justify-center px-2.5 py-1 rounded bg-slate-100 text-slate-700 text-[11px] sm:text-xs font-semibold">
+            Question {{ forloop.counter }} of {{ questions|length }}
+          </span>
+          <span class="text-[11px] sm:text-xs text-slate-400 font-medium">Required</span>
+        </div>
+
+        <fieldset>
+          <legend class="text-base sm:text-xl font-bold text-slate-900 leading-snug">
+            {{ question.text }}
+          </legend>
+          
+          <p class="text-xs sm:text-sm text-slate-500 mt-1.5 mb-5 leading-relaxed">
+            {{ question.help_text }}
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            
+            <!-- YES Option -->
+            <label class="option-label relative flex items-center p-4 border rounded-xl cursor-pointer hover:border-blue-400 hover:bg-slate-50 transition border-slate-200 bg-white shadow-xs min-h-[56px] select-none">
+              <input type="radio" name="{{ question.id }}" value="yes" class="sr-only peer" required>
+              <div class="flex items-center justify-between w-full">
+                <div class="flex items-center space-x-3">
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-300 peer-checked:border-blue-600 peer-checked:bg-blue-600 flex items-center justify-center flex-shrink-0">
+                    <span class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></span>
+                  </div>
+                  <span class="font-semibold text-slate-900 text-sm sm:text-base">Yes</span>
+                </div>
+                <!-- Lucide Check -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600 opacity-0 peer-checked:opacity-100 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </label>
+
+            <!-- NO Option -->
+            <label class="option-label relative flex items-center p-4 border rounded-xl cursor-pointer hover:border-blue-400 hover:bg-slate-50 transition border-slate-200 bg-white shadow-xs min-h-[56px] select-none">
+              <input type="radio" name="{{ question.id }}" value="no" class="sr-only peer" required>
+              <div class="flex items-center justify-between w-full">
+                <div class="flex items-center space-x-3">
+                  <div class="w-5 h-5 rounded-full border-2 border-slate-300 peer-checked:border-blue-600 peer-checked:bg-blue-600 flex items-center justify-center flex-shrink-0">
+                    <span class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></span>
+                  </div>
+                  <span class="font-semibold text-slate-900 text-sm sm:text-base">No</span>
+                </div>
+                <!-- Lucide X Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400 opacity-0 peer-checked:opacity-100 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </div>
+            </label>
+
+          </div>
+        </fieldset>
+
+      </div>
+    {% endfor %}
+
+    <!-- Controls (Back / Next / Submit) -->
+    <div class="flex items-center justify-between pt-2 gap-3">
+      <button type="button" id="btn-prev-step" class="invisible inline-flex items-center px-3.5 sm:px-4 py-2 sm:py-2.5 border border-slate-300 text-xs sm:text-sm font-medium rounded-lg text-slate-700 bg-white hover:bg-slate-50 transition active:scale-95">
+        <!-- Lucide ArrowLeft -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="mr-1.5 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Previous</span>
+      </button>
+
+      <button type="button" id="btn-next-step" class="inline-flex items-center px-4 sm:px-6 py-2 sm:py-2.5 border border-transparent text-xs sm:text-sm font-semibold rounded-lg text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition active:scale-95">
+        <span>Next Question</span>
+        <!-- Lucide ArrowRight -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="ml-1.5 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+
+      <button type="submit" id="btn-submit-all" class="hidden inline-flex items-center px-4 sm:px-6 py-2 sm:py-2.5 border border-transparent text-xs sm:text-sm font-semibold rounded-lg text-white bg-emerald-600 hover:bg-emerald-700 shadow-sm transition active:scale-95">
+        <span>Calculate Results</span>
+        <!-- Lucide CheckCircle -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="ml-1.5 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </button>
+    </div>
+
+  </form>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/calculator.js' %}"></script>
+{% endblock %}

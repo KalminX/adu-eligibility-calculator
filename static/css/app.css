@@ -1,0 +1,23 @@
+/* Custom styles complementing Tailwind CSS */
+
+/* Screen-reader and accessible honeypot positioning */
+.sr-only-hp {
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Accessible focus ring */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Radio button card selection transitions */
+.radio-card-label {
+  transition: all 0.15s ease-in-out;
+}

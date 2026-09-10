@@ -1,0 +1,310 @@
+{% extends "portal/base_portal.html" %}
+
+{% block title %}Lead Pipeline Dashboard{% endblock %}
+
+{% block content %}
+<div>
+
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">ADU Lead Pipeline</h1>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1">
+        Screened prospective properties, qualification evaluations, and automated dispatch logs.
+      </p>
+    </div>
+    
+    <!-- Header Quick Actions -->
+    <div class="flex items-center space-x-3 self-start sm:self-auto">
+      <a href="{% url 'portal:export_csv' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}" 
+        class="inline-flex items-center px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 shadow-xs transition active:scale-95">
+        <!-- Lucide Download -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Export CSV</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- KPI Metric Cards Grid -->
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6">
+    
+    <!-- Total Inquiries -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+      <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Total Leads</p>
+      <p class="text-2xl font-extrabold text-slate-900 mt-1">{{ total_count }}</p>
+      <span class="text-[10px] text-slate-400 font-medium">All submissions</span>
+    </div>
+
+    <!-- Potentially Eligible -->
+    <div class="bg-white p-4 rounded-2xl border border-emerald-200 bg-emerald-50/20 shadow-xs">
+      <p class="text-[11px] font-semibold text-emerald-800 uppercase tracking-wider">Eligible</p>
+      <p class="text-2xl font-extrabold text-emerald-700 mt-1">{{ eligible_count }}</p>
+      <span class="text-[10px] text-emerald-600 font-medium">High conversion</span>
+    </div>
+
+    <!-- Needs Review -->
+    <div class="bg-white p-4 rounded-2xl border border-amber-200 bg-amber-50/20 shadow-xs">
+      <p class="text-[11px] font-semibold text-amber-800 uppercase tracking-wider">Needs Review</p>
+      <p class="text-2xl font-extrabold text-amber-700 mt-1">{{ review_count }}</p>
+      <span class="text-[10px] text-amber-600 font-medium">Specialized zoning</span>
+    </div>
+
+    <!-- Unlikely -->
+    <div class="bg-white p-4 rounded-2xl border border-rose-200 bg-rose-50/20 shadow-xs">
+      <p class="text-[11px] font-semibold text-rose-800 uppercase tracking-wider">Unlikely</p>
+      <p class="text-2xl font-extrabold text-rose-700 mt-1">{{ unlikely_count }}</p>
+      <span class="text-[10px] text-rose-600 font-medium">Site restricted</span>
+    </div>
+
+    <!-- Email Delivered -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+      <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Email Sent</p>
+      <p class="text-2xl font-extrabold text-blue-600 mt-1">{{ email_delivered_count }}</p>
+      <span class="text-[10px] text-slate-400 font-medium">Resend API</span>
+    </div>
+
+    <!-- WhatsApp Delivered -->
+    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
+      <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">WhatsApp</p>
+      <p class="text-2xl font-extrabold text-emerald-600 mt-1">{{ wa_delivered_count }}</p>
+      <span class="text-[10px] text-slate-400 font-medium">Cloud / Mock</span>
+    </div>
+
+  </div>
+
+  <!-- Search & Filter Controls Card -->
+  <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs mb-6">
+    <form method="get" action="{% url 'portal:dashboard' %}" class="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-12 sm:gap-3 items-end">
+      
+      <!-- Search Input -->
+      <div class="sm:col-span-4">
+        <label for="id_q" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Search Leads</label>
+        <div class="relative rounded-lg">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <!-- Lucide Search -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <input type="text" name="q" id="id_q" value="{{ query }}" placeholder="Search by name, email, or phone..."
+            class="w-full pl-9 pr-3 py-2 text-xs sm:text-sm rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+        </div>
+      </div>
+
+      <!-- Eligibility Filter -->
+      <div class="sm:col-span-3">
+        <label for="id_eligibility" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Eligibility</label>
+        <select name="eligibility" id="id_eligibility" class="w-full py-2 px-3 text-xs sm:text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+          <option value="">All Outcomes</option>
+          <option value="Potentially Eligible" {% if eligibility_filter == "Potentially Eligible" %}selected{% endif %}>Potentially Eligible</option>
+          <option value="Needs Further Review" {% if eligibility_filter == "Needs Further Review" %}selected{% endif %}>Needs Further Review</option>
+          <option value="Currently Unlikely to Qualify" {% if eligibility_filter == "Currently Unlikely to Qualify" %}selected{% endif %}>Currently Unlikely</option>
+        </select>
+      </div>
+
+      <!-- Notification Status Filter -->
+      <div class="sm:col-span-2">
+        <label for="id_email_status" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Email Status</label>
+        <select name="email_status" id="id_email_status" class="w-full py-2 px-3 text-xs sm:text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+          <option value="">All</option>
+          <option value="sent" {% if email_filter == "sent" %}selected{% endif %}>Sent (Delivered)</option>
+          <option value="failed" {% if email_filter == "failed" %}selected{% endif %}>Not Sent / Mock</option>
+        </select>
+      </div>
+
+      <!-- Sort Filter -->
+      <div class="sm:col-span-2">
+        <label for="id_sort" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Order</label>
+        <select name="sort" id="id_sort" class="w-full py-2 px-3 text-xs sm:text-sm rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-blue-600 focus:border-blue-600">
+          <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest First</option>
+          <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest First</option>
+        </select>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="sm:col-span-1 flex items-center space-x-1.5 pt-2 sm:pt-0">
+        <button type="submit" title="Apply filters" class="w-full sm:w-auto inline-flex items-center justify-center p-2.5 rounded-lg text-white bg-blue-600 hover:bg-blue-700 shadow-xs transition active:scale-95">
+          <!-- Lucide Filter -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          <span class="sm:hidden ml-1 text-xs font-bold">Apply Filter</span>
+        </button>
+        {% if query or eligibility_filter or email_filter or wa_filter or sort != "newest" %}
+          <a href="{% url 'portal:dashboard' %}" title="Clear filters" class="p-2.5 rounded-lg text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 transition">
+            <!-- Lucide X -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Leads Table & Responsive Cards -->
+  <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+    
+    {% if page_obj %}
+      <!-- Desktop & Tablet Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+              <th class="py-3.5 px-4">Lead Ref / Name</th>
+              <th class="py-3.5 px-4">Contact Info</th>
+              <th class="py-3.5 px-4">Feasibility Outcome</th>
+              <th class="py-3.5 px-4">Notifications</th>
+              <th class="py-3.5 px-4">Submitted (UTC)</th>
+              <th class="py-3.5 px-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for lead in page_obj %}
+              <tr class="hover:bg-slate-50/80 transition">
+                
+                <!-- Ref & Name -->
+                <td class="py-3.5 px-4">
+                  <span class="font-mono text-xs font-bold text-blue-700 block">#ADU-{{ lead.id|stringformat:"05d" }}</span>
+                  <span class="font-bold text-slate-900 text-sm block">{{ lead.name }}</span>
+                </td>
+
+                <!-- Contact -->
+                <td class="py-3.5 px-4">
+                  <a href="mailto:{{ lead.email }}" class="text-blue-600 hover:underline block truncate max-w-[200px]">{{ lead.email }}</a>
+                  <a href="tel:{{ lead.phone }}" class="text-slate-500 text-xs hover:text-slate-800 block">{{ lead.phone }}</a>
+                </td>
+
+                <!-- Outcome Badge -->
+                <td class="py-3.5 px-4">
+                  {% if lead.eligibility_result == "Potentially Eligible" %}
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">
+                      <!-- Lucide CheckCircle -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 mr-1 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <span>Eligible</span>
+                    </span>
+                  {% elif lead.eligibility_result == "Needs Further Review" %}
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+                      <!-- Lucide AlertTriangle -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 mr-1 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
+                      </svg>
+                      <span>Review</span>
+                    </span>
+                  {% else %}
+                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800">
+                      <!-- Lucide AlertOctagon -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 mr-1 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                      </svg>
+                      <span>Unlikely</span>
+                    </span>
+                  {% endif %}
+                </td>
+
+                <!-- Notification status -->
+                <td class="py-3.5 px-4">
+                  <div class="flex items-center space-x-1.5">
+                    <!-- Email pill -->
+                    <span class="px-2 py-0.5 rounded text-[11px] font-semibold {% if lead.email_sent %}bg-blue-100 text-blue-800{% else %}bg-slate-100 text-slate-500{% endif %}" title="{% if lead.email_sent %}Delivered via Resend{% else %}{{ lead.email_error|default:'Not sent' }}{% endif %}">
+                      Email: {% if lead.email_sent %}Sent{% else %}Mock/Pending{% endif %}
+                    </span>
+                    <!-- WhatsApp pill -->
+                    <span class="px-2 py-0.5 rounded text-[11px] font-semibold {% if lead.whatsapp_sent %}bg-emerald-100 text-emerald-800{% else %}bg-slate-100 text-slate-500{% endif %}" title="{% if lead.whatsapp_sent %}Delivered via WhatsApp{% else %}{{ lead.whatsapp_error|default:'Not sent' }}{% endif %}">
+                      WA: {% if lead.whatsapp_sent %}Sent{% else %}Mock/Disabled{% endif %}
+                    </span>
+                  </div>
+                </td>
+
+                <!-- Date -->
+                <td class="py-3.5 px-4 text-slate-500 text-xs">
+                  {{ lead.created_at|date:"M d, Y" }}
+                  <span class="block text-[10px] text-slate-400">{{ lead.created_at|time:"H:i" }} UTC</span>
+                </td>
+
+                <!-- Actions -->
+                <td class="py-3.5 px-4 text-right">
+                  <a href="{% url 'portal:lead_detail' lead_id=lead.id %}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 transition active:scale-95">
+                    <span>Inspect</span>
+                    <!-- Lucide ArrowRight -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </a>
+                </td>
+
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+        <div>
+          Showing page <span class="font-bold text-slate-900">{{ page_obj.number }}</span> of <span class="font-bold text-slate-900">{{ page_obj.paginator.num_pages }}</span> ({{ page_obj.paginator.count }} total leads)
+        </div>
+
+        <div class="flex items-center space-x-2">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if eligibility_filter %}&eligibility={{ eligibility_filter }}{% endif %}{% if email_filter %}&email_status={{ email_filter }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
+              class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 font-semibold text-slate-700 transition">
+              &larr; Previous
+            </a>
+          {% endif %}
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if eligibility_filter %}&eligibility={{ eligibility_filter }}{% endif %}{% if email_filter %}&email_status={{ email_filter }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}"
+              class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 font-semibold text-slate-700 transition">
+              Next &rarr;
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+    {% else %}
+      <!-- Empty State -->
+      <div class="p-12 text-center">
+        <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 mx-auto flex items-center justify-center mb-3">
+          <!-- Lucide Inbox -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+            <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>
+          </svg>
+        </div>
+        <h3 class="text-base font-bold text-slate-900">No Leads Found</h3>
+        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+          {% if query or eligibility_filter or email_filter %}
+            No leads matched your current search filters. Try adjusting your search criteria.
+          {% else %}
+            No prospective leads have submitted the calculator yet.
+          {% endif %}
+        </p>
+        <div class="mt-4">
+          {% if query or eligibility_filter or email_filter %}
+            <a href="{% url 'portal:dashboard' %}" class="inline-flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition">
+              Reset Filters
+            </a>
+          {% else %}
+            <a href="{% url 'calculator:questions' %}" target="_blank" class="inline-flex items-center px-4 py-2 rounded-lg text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 transition">
+              Submit Test Lead via Calculator &rarr;
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+
+</div>
+{% endblock %}

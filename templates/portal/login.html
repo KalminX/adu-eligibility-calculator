@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Staff Portal Login{% endblock %}
+
+{% block content %}
+<div class="py-12 sm:py-20 max-w-md mx-auto px-4 sm:px-6">
+  
+  <div class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+    
+    <!-- Portal Header Icon & Title -->
+    <div class="text-center mb-6">
+      <div class="w-12 h-12 rounded-xl bg-slate-900 text-white mx-auto flex items-center justify-center mb-3 shadow-sm">
+        <!-- Lucide Lock -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">Staff Portal Sign In</h1>
+      <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
+        Access the ADU lead pipeline, review questionnaire transcripts, and monitor notification dispatches.
+      </p>
+    </div>
+
+    <!-- Login Error Alert -->
+    {% if form.errors %}
+      <div class="mb-5 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs flex items-start space-x-2">
+        <!-- Lucide AlertCircle -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <div>
+          <span class="font-bold">Authentication failed:</span> Please check your username and password.
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Login Form -->
+    <form method="post" action="{% url 'portal:login' %}" class="space-y-4">
+      {% csrf_token %}
+      
+      <input type="hidden" name="next" value="{{ next|default:'/portal/' }}">
+
+      <!-- Username -->
+      <div>
+        <label for="id_username" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+          Username
+        </label>
+        <div class="relative rounded-lg">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <!-- Lucide User -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <input type="text" name="username" id="id_username" required autofocus placeholder="admin or staff_advisor"
+            class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 text-sm text-slate-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition">
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label for="id_password" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+          Password
+        </label>
+        <div class="relative rounded-lg">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <!-- Lucide Key -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m21 2-2 2m-2-2 2 2M3 21l9-9m0 0 3-3a5 5 0 1 0-7-7 5 5 0 0 0 7 7l-3 3Z"></path>
+            </svg>
+          </div>
+          <input type="password" name="password" id="id_password" required placeholder="••••••••••••"
+            class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 text-sm text-slate-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition">
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="pt-2">
+        <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-semibold rounded-lg text-white bg-slate-900 hover:bg-slate-800 shadow transition active:scale-[0.99]">
+          <span>Sign In to Staff Portal</span>
+          <!-- Lucide ArrowRight -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+
+    </form>
+
+    <!-- Credential Reference Notice -->
+    <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+      <p class="text-xs text-slate-500">
+        Demo login credentials are documented in <code class="px-1.5 py-0.5 bg-slate-100 rounded text-slate-800 font-mono text-[11px]">logins.txt</code>
+      </p>
+      <a href="{% url 'calculator:index' %}" class="inline-block mt-3 text-xs font-semibold text-blue-600 hover:text-blue-800 transition">
+        &larr; Return to Public Calculator
+      </a>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

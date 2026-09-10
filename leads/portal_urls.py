@@ -12,6 +12,7 @@ urlpatterns = [
     path("login/", portal_views.portal_login, name="login"),
     path("logout/", portal_views.portal_logout, name="logout"),
     path("leads/<int:lead_id>/", portal_views.portal_lead_detail, name="lead_detail"),
+    path("leads/<int:lead_id>/send-email/", portal_views.portal_send_staff_email, name="send_staff_email"),
     path("leads/<int:lead_id>/resend-email/", portal_views.portal_resend_email, name="resend_email"),
     path("leads/<int:lead_id>/resend-whatsapp/", portal_views.portal_resend_whatsapp, name="resend_whatsapp"),
     path("leads/<int:lead_id>/delete/", portal_views.portal_lead_delete, name="lead_delete"),

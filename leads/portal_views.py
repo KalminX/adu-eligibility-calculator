@@ -16,7 +16,7 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseForbidden
 from calculator.eligibility import QUESTIONS, QUESTION_MAP, normalize_bool
 from .models import Lead
-from .services.email import send_lead_email_notification
+from .services.email import send_lead_email_notification, send_staff_email_to_lead
 from .services.whatsapp import send_lead_whatsapp_notification
 
 
@@ -223,6 +223,56 @@ def portal_resend_email(request, lead_id: int):
     else:
         messages.warning(request, f"Email send failed for Lead #{lead.id}: {result.get('error')}")
 
+    return redirect("portal:lead_detail", lead_id=lead.id)
+
+
+@staff_required
+def portal_send_staff_email(request, lead_id: int):
+    """
+    Handles staff composition and direct dispatch of an email to the prospective lead.
+    Allows staff to personalize message body and subject line.
+    """
+    if request.method != "POST":
+        return HttpResponseForbidden("POST required.")
+
+    lead = get_object_or_404(Lead, id=lead_id)
+    subject = request.POST.get("subject", "").strip()
+    message_body = request.POST.get("message", "").strip()
+
+    if not subject:
+        subject = f"Update on your ADU Assessment (Lead #ADU-{lead.id:05d})"
+
+    if not message_body:
+        messages.error(request, "Message body cannot be empty.")
+        return redirect("portal:lead_detail", lead_id=lead.id)
+
+    sender_name = request.user.get_full_name() or request.user.username or "ADU Advisory Team"
+    result = send_staff_email_to_lead(
+        lead=lead,
+        subject=subject,
+        message_body=message_body,
+        sender_name=sender_name,
+    )
+
+    if result.get("success"):
+        lead.email_sent = True
+        if result.get("sandboxed"):
+            lead.email_error = (
+                f"Delivered via Resend Sandbox to {result.get('delivered_to')} (Target: {lead.email})"
+            )
+            messages.success(
+                request,
+                f"Email successfully dispatched via Resend! Delivered to {result.get('delivered_to')} (Sandbox mode routing; in production with verified domain delivers directly to {lead.email}).",
+            )
+        else:
+            lead.email_error = ""
+            messages.success(request, f"Email successfully delivered to {lead.name} ({lead.email}) via Resend.")
+    elif result.get("simulated"):
+        messages.info(request, f"Simulated email send logged for {lead.name} (RESEND_API_KEY mock mode).")
+    else:
+        messages.error(request, f"Email delivery failed for {lead.email}: {result.get('error')}")
+
+    lead.save(update_fields=["email_sent", "email_error"])
     return redirect("portal:lead_detail", lead_id=lead.id)
 
 

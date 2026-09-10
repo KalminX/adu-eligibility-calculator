@@ -121,6 +121,23 @@ class PortalStaffAuthTestCase(TestCase):
         self.lead.refresh_from_db()
         self.assertTrue(self.lead.email_sent)
 
+    @patch("leads.portal_views.send_staff_email_to_lead")
+    def test_staff_send_direct_email(self, mock_staff_email):
+        mock_staff_email.return_value = {"success": True, "simulated": False, "message_id": "resend_staff_msg"}
+        self.client.force_login(self.staff_user)
+
+        response = self.client.post(
+            reverse("portal:send_staff_email", kwargs={"lead_id": self.lead.id}),
+            data={
+                "subject": "Discussion on your setback allowances",
+                "message": "Hi Prospect, let us schedule a discovery call.",
+            },
+        )
+        self.assertRedirects(response, reverse("portal:lead_detail", kwargs={"lead_id": self.lead.id}))
+        mock_staff_email.assert_called_once()
+        self.lead.refresh_from_db()
+        self.assertTrue(self.lead.email_sent)
+
     @patch("leads.portal_views.send_lead_whatsapp_notification")
     def test_manual_resend_whatsapp(self, mock_wa):
         mock_wa.return_value = {"success": True, "simulated": True, "mode": "mock"}

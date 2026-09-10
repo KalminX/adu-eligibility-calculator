@@ -172,6 +172,7 @@ EMAIL_PROVIDER = os.getenv("EMAIL_PROVIDER", "resend")
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "onboarding@resend.dev")
 LEAD_NOTIFICATION_EMAIL = os.getenv("LEAD_NOTIFICATION_EMAIL", "admin@example.com")
+RESEND_SANDBOX_EMAIL = os.getenv("RESEND_SANDBOX_EMAIL", "noriabure@gmail.com")
 
 # 2. WhatsApp (Meta Cloud API / Mock Mode)
 WHATSAPP_ENABLED = os.getenv("WHATSAPP_ENABLED", "False").lower() in ("true", "1", "yes", "t")

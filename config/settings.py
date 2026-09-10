@@ -17,16 +17,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv(
-    "SECRET_KEY",
-    "django-insecure-development-placeholder-change-in-production-32-chars",
+SECRET_KEY = (
+    os.getenv("SECRET_KEY", "").strip()
+    or "django-insecure-production-fallback-adu-calculator-secret-key-9938127391823"
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes", "t")
 
 # Hosts configuration
-allowed_hosts_raw = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1")
+allowed_hosts_raw = os.getenv("ALLOWED_HOSTS", "").strip() or "localhost,127.0.0.1"
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_raw.split(",") if host.strip()]
 
 # Ensure Vercel serverless domains, localhost, and test runner are always permitted
@@ -168,11 +168,11 @@ if not DEBUG:
 # Third-Party Integrations Configuration
 
 # 1. Email (Resend)
-EMAIL_PROVIDER = os.getenv("EMAIL_PROVIDER", "resend")
+EMAIL_PROVIDER = os.getenv("EMAIL_PROVIDER", "").strip() or "resend"
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "onboarding@resend.dev")
-LEAD_NOTIFICATION_EMAIL = os.getenv("LEAD_NOTIFICATION_EMAIL", "admin@example.com")
-RESEND_SANDBOX_EMAIL = os.getenv("RESEND_SANDBOX_EMAIL", "noriabure@gmail.com")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "").strip() or "onboarding@resend.dev"
+LEAD_NOTIFICATION_EMAIL = os.getenv("LEAD_NOTIFICATION_EMAIL", "").strip() or "noriabure@gmail.com"
+RESEND_SANDBOX_EMAIL = os.getenv("RESEND_SANDBOX_EMAIL", "").strip() or "noriabure@gmail.com"
 
 # 2. WhatsApp (Meta Cloud API / Mock Mode)
 WHATSAPP_ENABLED = os.getenv("WHATSAPP_ENABLED", "False").lower() in ("true", "1", "yes", "t")

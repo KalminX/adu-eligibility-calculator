@@ -5,11 +5,14 @@
 {% block content %}
 <div class="py-8 sm:py-16 md:py-20">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    
+
     <!-- Status Badge -->
-    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-[11px] sm:text-xs font-semibold mb-6 max-w-full text-left sm:text-center leading-snug">
+    <div
+      class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-[11px] sm:text-xs font-semibold mb-6 max-w-full text-left sm:text-center leading-snug">
       <!-- Lucide Check Icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 flex-shrink-0"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true">
         <polyline points="20 6 9 17 4 12"></polyline>
       </svg>
       <span>Free Preliminary Feasibility Screening &bull; No Sign-up Required</span>
@@ -21,32 +24,38 @@
     </h1>
 
     <p class="mt-4 sm:mt-5 text-base sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-      Answer 7 simple questions to evaluate whether your property meets core baseline criteria for building an Accessory Dwelling Unit in California.
+      Answer 7 simple questions to evaluate whether your property meets the core baseline criteria for building an
+      Accessory
+      Dwelling Unit in NY State, Manhattan, Queens, or the Bronx.
     </p>
 
     <!-- Main Action Buttons -->
     <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-      <a href="{% url 'calculator:questions' %}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3.5 border border-transparent text-sm sm:text-base font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow transition active:scale-95">
+      <a href="{% url 'calculator:questions' %}"
+        class="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3.5 border border-transparent text-sm sm:text-base font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow transition active:scale-95">
         <span>Start 7-Question Check</span>
         <!-- Lucide Arrow Right -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>
         </svg>
       </a>
 
-      <a href="#how-it-works" class="w-full sm:w-auto inline-flex items-center justify-center px-5 sm:px-6 py-3.5 border border-slate-300 text-sm sm:text-base font-medium rounded-xl text-slate-700 bg-white hover:bg-slate-50 transition active:scale-95">
+      <a href="#how-it-works"
+        class="w-full sm:w-auto inline-flex items-center justify-center px-5 sm:px-6 py-3.5 border border-slate-300 text-sm sm:text-base font-medium rounded-xl text-slate-700 bg-white hover:bg-slate-50 transition active:scale-95">
         Learn How It Works
       </a>
     </div>
 
     <!-- Key Metrics / Feature Cards -->
     <div id="how-it-works" class="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 text-left">
-      
+
       <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
         <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center mb-3 sm:mb-4">
           <!-- Lucide ClipboardCheck Icon -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
             <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
             <path d="m9 14 2 2 4-4"></path>
@@ -54,35 +63,40 @@
         </div>
         <h3 class="text-sm sm:text-base font-bold text-slate-900">1. Property Screening</h3>
         <p class="mt-1.5 text-xs sm:text-sm text-slate-600 leading-relaxed">
-          Screen property ownership, parcel zoning type, lot setbacks, and structure conversion viability in 7 targeted inquiries.
+          Screen property ownership, parcel zoning type, lot setbacks, and structure conversion viability in 7 targeted
+          inquiries.
         </p>
       </div>
 
       <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
         <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center mb-3 sm:mb-4">
           <!-- Lucide CheckCircle Icon -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
           </svg>
         </div>
         <h3 class="text-sm sm:text-base font-bold text-slate-900">2. Instant Feasibility Status</h3>
         <p class="mt-1.5 text-xs sm:text-sm text-slate-600 leading-relaxed">
-          Receive clear deterministic results categorized as Potentially Eligible, Needs Further Review, or Unlikely to Qualify.
+          Receive clear deterministic results categorized as Potentially Eligible, Needs Further Review, or Unlikely to
+          Qualify.
         </p>
       </div>
 
       <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
         <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center mb-3 sm:mb-4">
           <!-- Lucide Send Icon -->
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <line x1="22" y1="2" x2="11" y2="13"></line>
             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
           </svg>
         </div>
         <h3 class="text-sm sm:text-base font-bold text-slate-900">3. Direct Consultation</h3>
         <p class="mt-1.5 text-xs sm:text-sm text-slate-600 leading-relaxed">
-          Connect your results directly to an ADU advisor with automated email and WhatsApp alerts sent to the review team.
+          Connect your results directly to an ADU advisor with automated email and WhatsApp alerts sent to the review
+          team.
         </p>
       </div>
 
@@ -91,13 +105,17 @@
     <!-- Prototype Legal Banner -->
     <div class="mt-8 sm:mt-12 p-4 bg-amber-50 rounded-xl border border-amber-200 text-left flex items-start space-x-3">
       <!-- Lucide AlertCircle -->
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-700 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-amber-700 flex-shrink-0 mt-0.5"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="12" y1="8" x2="12" y2="12"></line>
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
       <div class="text-[11px] sm:text-xs text-amber-900 leading-relaxed">
-        <strong class="font-semibold">Demonstration Notice:</strong> This web application is a technical prototype demonstrating end-to-end lead qualification, database persistence, and multi-channel notification dispatch. It does not provide certified legal, zoning, or engineering advice.
+        <strong class="font-semibold">Demonstration Notice:</strong> This web application is a technical prototype
+        demonstrating end-to-end lead qualification, database persistence, and multi-channel notification dispatch. It
+        does not provide certified legal, zoning, or engineering advice.
       </div>
     </div>
 
